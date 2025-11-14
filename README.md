@@ -1,59 +1,42 @@
-# SchoolLinkApp
+# SchoolLink App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
+The SchoolLink App is a security and attendance application for schools. It allows authorized personnel to scan student ID cards with QR codes to verify their enrollment status and record their attendance.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Secure Login:** Users must authenticate to access the application.
+- **School Selection:** Before scanning, users select the school they are currently at.
+- **QR Code Scanning:** The app uses the device's camera to scan QR codes on student ID cards.
+- **Student Verification:** After a successful scan, the app communicates with the EMIS (Education Management Information System) to verify the student's enrollment at the selected school.
+- **Visual Confirmation:** The student's photo, name, and institution are displayed for visual confirmation.
+- **Attendance Marking:** Authorized users can mark the student as present.
+- **Live Reports:** View live attendance reports.
+- **Manual Entry:** Manually enter student information if QR code scanning is not possible.
 
-```bash
-ng serve
-```
+## Technologies Used
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Angular:** A platform for building mobile and desktop web applications.
+- **Tailwind CSS:** A utility-first CSS framework for rapid UI development.
+- **ZXing Ngx-Scanner:** An Angular wrapper for the ZXing library for barcode scanning.
+- **SweetAlert2:** A library for creating beautiful and responsive alerts.
+- **Firebase:** Used for hosting the application.
 
-## Code scaffolding
+## Getting Started
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Prerequisites
 
-```bash
-ng generate component component-name
-```
+- Node.js and npm installed.
+- Angular CLI installed (`npm install -g @angular/cli`).
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Installation
 
-```bash
-ng generate --help
-```
+1. Clone the repository: `git clone <repository-url>`
+2. Install dependencies: `npm install`
 
-## Building
+### Development Server
 
-To build the project run:
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-```bash
-ng build
-```
+### Building
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
