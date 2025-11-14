@@ -1,0 +1,2066 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenEMIS Core API V4",
+    "description": "The [OpenEMIS](https://www.openemis.org/) initiative aims to deploy a high-quality Education Management Information System (EMIS) designed to collect and report data on schools, students, teachers and staff. The system was conceived by `UNESCO` to be a royalty-free system that can be easily customized to meet the specific needs of member countries.",
+    "termsOfService": "https://www.openemis.org/terms-of-service/",
+    "contact": {
+      "email": "support@openemis.org"
+    },
+    "license": {
+      "name": "GNU General Public License V3.0",
+      "url": "https://www.gnu.org/licenses/gpl-3.0.en.html"
+    },
+    "version": "4.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://demo.openemis.org/core"
+    },
+    {
+      "url": "https://localhost:8486/core"
+    }
+  ],
+  "paths": {
+    "/api/v4/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login endpoint",
+        "description": "Authenticate user and retrieve access token",
+        "operationId": "6d4c37280a3576c90d4e4da3c7a8125f",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "admin"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "demo"
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "apikeytest"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL3BvY29yLW9wZW5lbWlzLWNvcmVcL2FwaVwvdjRcL2xvZ2luIiwiaWF0IjoxNzEyODk5MTYyLCJleHAiOjE3MTI5MDI3NjIsIm5iZiI6MTcxMjg5OTE2MiwianRpIjoiVlo1YnFjeXFNUXVSMHZTaSIsInN1YiI6MiwicHJ2IjoiZTIxNDlmNmY1NGFiZWYxYzdkNjYzM2E1M2M5MjJjNTc4MTgwNWU4YyJ9.ozhynp6UBJA11ibptkc_hMGQSyrDiM0ZZMKEtZRAhog"
+                        },
+                        "client_id": {
+                          "type": "string",
+                          "example": "1678073692-e3b037ab67ee2b8a.app"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      }
+    },
+    "/api/v4/institutions": {
+      "get": {
+        "tags": [
+          "Institutions"
+        ],
+        "summary": "Get a list of All Institutions",
+        "description": "Returns a list of institutions based on the provided parameters",
+        "operationId": "86a7f297b0f91e6443f630671cb0b676",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "query",
+            "description": "Institution Id.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 6
+            }
+          },
+          {
+            "name": "typeId",
+            "in": "query",
+            "description": "Institution Type Id.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "classificationId",
+            "in": "query",
+            "description": "Classification Id.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "institutionCode",
+            "in": "query",
+            "description": "Institution Code.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "K0001"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 6
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Avory Primary School"
+                              },
+                              "alternative_name": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "code": {
+                                "type": "string",
+                                "example": "P1002"
+                              },
+                              "address": {
+                                "type": "string",
+                                "example": "270 Duke Lane",
+                                "nullable": true
+                              },
+                              "postal_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "contact_person": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "telephone": {
+                                "type": "string",
+                                "example": "83948723",
+                                "nullable": true
+                              },
+                              "fax": {
+                                "type": "string",
+                                "example": "83948723",
+                                "nullable": true
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "contact@avoryprimary.com",
+                                "nullable": true
+                              },
+                              "website": {
+                                "type": "string",
+                                "example": "avoryprimary.com",
+                                "nullable": true
+                              },
+                              "date_opened": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2014-12-01",
+                                "nullable": true
+                              },
+                              "year_opened": {
+                                "type": "integer",
+                                "example": "2014",
+                                "nullable": true
+                              },
+                              "date_closed": {
+                                "type": "string",
+                                "format": "date",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "year_closed": {
+                                "type": "integer",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "longitude": {
+                                "type": "string",
+                                "example": "76.76315917262934",
+                                "nullable": true
+                              },
+                              "latitude": {
+                                "type": "string",
+                                "example": "-15.378664747523954",
+                                "nullable": true
+                              },
+                              "logo_name": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "logo_content": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "shift_type": {
+                                "type": "integer",
+                                "example": 3,
+                                "nullable": true
+                              },
+                              "classification": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                              },
+                              "area_id": {
+                                "type": "integer",
+                                "example": 11,
+                                "nullable": true
+                              },
+                              "area_administrative_id": {
+                                "type": "integer",
+                                "example": 23,
+                                "nullable": true
+                              },
+                              "institution_locality_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                              },
+                              "institution_locality_name": {
+                                "type": "string",
+                                "example": "Urban",
+                                "nullable": true
+                              },
+                              "institution_locality_international_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_locality_national_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_ownership_id": {
+                                "type": "integer",
+                                "example": 4,
+                                "nullable": true
+                              },
+                              "institution_ownership_name": {
+                                "type": "string",
+                                "example": "Freehold",
+                                "nullable": true
+                              },
+                              "institution_ownership_international_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_ownership_national_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_provider_id": {
+                                "type": "integer",
+                                "example": 2,
+                                "nullable": true
+                              },
+                              "institution_provider_name": {
+                                "type": "string",
+                                "example": "Government",
+                                "nullable": true
+                              },
+                              "institution_provider_international_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_provider_national_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_sector_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                              },
+                              "institution_sector_name": {
+                                "type": "string",
+                                "example": "Public",
+                                "nullable": true
+                              },
+                              "institution_sector_international_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_sector_national_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_type_id": {
+                                "type": "integer",
+                                "example": 2,
+                                "nullable": true
+                              },
+                              "institution_type_name": {
+                                "type": "string",
+                                "example": "Primary",
+                                "nullable": true
+                              },
+                              "institution_type_international_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_type_national_code": {
+                                "type": "string",
+                                "example": null,
+                                "nullable": true
+                              },
+                              "institution_gender_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                              },
+                              "institution_gender_name": {
+                                "type": "string",
+                                "example": "Mixed",
+                                "nullable": true
+                              },
+                              "institution_gender_code": {
+                                "type": "string",
+                                "example": "X",
+                                "nullable": true
+                              },
+                              "institution_status_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                              },
+                              "institution_status_name": {
+                                "type": "string",
+                                "example": "Active",
+                                "nullable": true
+                              },
+                              "modified_user_id": {
+                                "type": "integer",
+                                "example": 2,
+                                "nullable": true
+                              },
+                              "modified": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-04-29 21:06:35",
+                                "nullable": true
+                              },
+                              "created_user_id": {
+                                "type": "integer",
+                                "example": 2,
+                                "nullable": true
+                              },
+                              "created": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-04-29 21:06:35",
+                                "nullable": true
+                              }
+                            },
+                            "type": "object"
+                          }
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Institutions"
+        ],
+        "summary": "Add institution",
+        "description": "Add institution",
+        "operationId": "098f4963a3082fcd578f0aa304a36268",
+        "requestBody": {
+          "description": "Json Payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "code",
+                  "address",
+                  "date_opened",
+                  "year_opened",
+                  "shift_type",
+                  "area_id",
+                  "area_administrative_id",
+                  "institution_locality_id",
+                  "institution_type_id",
+                  "institution_ownership_id",
+                  "institution_status_id",
+                  "institution_sector_id",
+                  "institution_provider_id",
+                  "institution_gender_id",
+                  "logo_content"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "test institution"
+                  },
+                  "alternative_name": {
+                    "type": "string",
+                    "example": "alternate name"
+                  },
+                  "code": {
+                    "type": "string",
+                    "example": "avl"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "postal_code": {
+                    "type": "integer",
+                    "example": 2661
+                  },
+                  "date_opened": {
+                    "type": "string",
+                    "example": "2022-03-01"
+                  },
+                  "year_opened": {
+                    "type": "string",
+                    "example": "2022-03-01"
+                  },
+                  "shift_type": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "classification": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "area_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "area_administrative_id": {
+                    "type": "integer",
+                    "example": "comment"
+                  },
+                  "institution_locality_id": {
+                    "type": "integer",
+                    "example": "comment"
+                  },
+                  "institution_type_id": {
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "institution_ownership_id": {
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "institution_status_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "institution_sector_id": {
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "institution_provider_id": {
+                    "type": "integer",
+                    "example": 3
+                  },
+                  "institution_gender_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "logo_content": {
+                    "type": "string",
+                    "example": "comment"
+                  },
+                  "contact_person": {
+                    "type": "string",
+                    "example": "contact person"
+                  },
+                  "telephone": {
+                    "type": "string",
+                    "example": "telephone"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "fax"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "test@test.com"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "www.example.com"
+                  },
+                  "longitude": {
+                    "type": "string",
+                    "example": "78.12"
+                  },
+                  "latitude": {
+                    "type": "string",
+                    "example": "22.12"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      }
+    },
+    "/api/v4/institutions/students": {
+      "get": {
+        "tags": [
+          "Institutions"
+        ],
+        "summary": "Get a list of students",
+        "description": "Get a list of students",
+        "operationId": "162c14a7ddb7f9ca664afa4f1c0f7131",
+        "parameters": [
+          {
+            "name": "academic_period_id",
+            "in": "query",
+            "description": "Academic period id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "10"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "student_id": {
+                                "type": "integer",
+                                "example": 196
+                              },
+                              "first_name": {
+                                "type": "string",
+                                "example": "Dixie"
+                              },
+                              "middle_name": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "third_name": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "last_name": {
+                                "type": "string",
+                                "example": "Campbell"
+                              },
+                              "openemis_no": {
+                                "type": "string",
+                                "example": "1522272158"
+                              },
+                              "date_of_birth": {
+                                "type": "string",
+                                "example": "2011-01-01"
+                              },
+                              "date_of_death": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "identity_number": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "external_reference": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "gender_id": {
+                                "type": "integer",
+                                "example": 2
+                              },
+                              "gender_name": {
+                                "type": "string",
+                                "example": "Female"
+                              },
+                              "start_date": {
+                                "type": "string",
+                                "example": "2019-01-01"
+                              },
+                              "start_year": {
+                                "type": "integer",
+                                "example": 2019
+                              },
+                              "end_date": {
+                                "type": "string",
+                                "example": "2019-12-31"
+                              },
+                              "end_year": {
+                                "type": "integer",
+                                "example": 2019
+                              },
+                              "institution_id": {
+                                "type": "integer",
+                                "example": 22
+                              },
+                              "institution_code": {
+                                "type": "string",
+                                "example": "P1009"
+                              },
+                              "institution_name": {
+                                "type": "string",
+                                "example": "Kinda Primary School"
+                              },
+                              "student_status_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "student_status_name": {
+                                "type": "string",
+                                "example": "Enrolled"
+                              },
+                              "student_status_code": {
+                                "type": "string",
+                                "example": "CURRENT"
+                              },
+                              "education_grade_id": {
+                                "type": "integer",
+                                "example": 121
+                              },
+                              "education_grade_name": {
+                                "type": "string",
+                                "example": "Primary 1"
+                              },
+                              "academic_period_id": {
+                                "type": "integer",
+                                "example": 28
+                              },
+                              "academic_period_name": {
+                                "type": "string",
+                                "example": "2019"
+                              },
+                              "previous_institution_student_id": {
+                                "type": "string",
+                                "example": "6546009d-815f-42e6-8db5-76050a4f95d9"
+                              },
+                              "classes": {
+                                "type": "array",
+                                "items": {
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "example": 593
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Primary 1-C"
+                                    },
+                                    "subjects": {
+                                      "type": "array",
+                                      "items": {
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "example": 4732
+                                          },
+                                          "name": {
+                                            "type": "string",
+                                            "example": "Expressive Arts"
+                                          }
+                                        },
+                                        "type": "object"
+                                      }
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "custom_fields": {
+                                "type": "array",
+                                "items": {
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "0d66a4f8-a274-48cc-9520-967a07731ae8"
+                                    },
+                                    "text_value": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "number_value": {
+                                      "type": "number",
+                                      "example": null
+                                    },
+                                    "decimal_value": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "textarea_value": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "date_value": {
+                                      "type": "string",
+                                      "format": "date",
+                                      "example": null
+                                    },
+                                    "time_value": {
+                                      "type": "string",
+                                      "format": "time",
+                                      "example": null
+                                    },
+                                    "file": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "student_custom_field_id": {
+                                      "type": "integer",
+                                      "example": 17
+                                    },
+                                    "student_id": {
+                                      "type": "integer",
+                                      "example": 14663
+                                    },
+                                    "student_custom_field": {
+                                      "properties": {
+                                        "id": {
+                                          "type": "integer",
+                                          "example": 17
+                                        },
+                                        "name": {
+                                          "type": "string",
+                                          "example": "Father Living With Student"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "modified_user_id": {
+                                "type": "integer",
+                                "example": null
+                              },
+                              "modified": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "created_user_id": {
+                                "type": "integer",
+                                "example": 2
+                              },
+                              "created": {
+                                "type": "string",
+                                "example": "2019-11-20 19:51:58"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Institutions"
+        ],
+        "summary": "Add student data record in institution.",
+        "description": "Add student data record in institution.",
+        "operationId": "ab6025ccb567258de0c50905c8f8c633",
+        "requestBody": {
+          "description": "Json Payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "academic_period_id",
+                  "education_grade_id",
+                  "student_id",
+                  "student_status_id",
+                  "start_date",
+                  "start_year",
+                  "end_date",
+                  "end_year",
+                  "institution_id"
+                ],
+                "properties": {
+                  "academic_period_id": {
+                    "type": "integer",
+                    "example": 32
+                  },
+                  "education_grade_id": {
+                    "type": "integer",
+                    "example": 189
+                  },
+                  "student_id": {
+                    "type": "integer",
+                    "example": 8815
+                  },
+                  "student_status_id": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "start_date": {
+                    "type": "integer",
+                    "example": "2024-05-03"
+                  },
+                  "start_year": {
+                    "type": "integer",
+                    "example": "2024"
+                  },
+                  "end_date": {
+                    "type": "integer",
+                    "example": "2024-12-31"
+                  },
+                  "end_year": {
+                    "type": "integer",
+                    "example": "2024"
+                  },
+                  "institution_id": {
+                    "type": "integer",
+                    "example": "6"
+                  },
+                  "previous_institution_student_id": {
+                    "type": "integer",
+                    "example": "8814"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      }
+    },
+    "/api/v4/institutions/list": {
+      "get": {
+        "tags": [
+          "Institutions"
+        ],
+        "summary": "Get list of Institutions on behalf of Institution Type Id and area id",
+        "description": "Get list of Institutions on behalf of Institution Type Id and area id",
+        "operationId": "732877e7893287ec4748c92b037bc839",
+        "parameters": [
+          {
+            "name": "institution_type_id",
+            "in": "query",
+            "description": "Id of Institution type",
+            "schema": {
+              "type": "integer",
+              "example": 2
+            }
+          },
+          {
+            "name": "area_id",
+            "in": "query",
+            "description": "Id of area",
+            "schema": {
+              "type": "integer",
+              "example": 4
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "10"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "P1002 - Avory Primary School"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      }
+    },
+    "/api/v4/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get a list of users",
+        "description": "Get a list of users",
+        "operationId": "ea0401135d07d83f2baf03c5898e6ace",
+        "parameters": [
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": "10"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "username": {
+                                "type": "string",
+                                "example": "admin"
+                              },
+                              "password": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "openemis_no": {
+                                "type": "string",
+                                "example": "1522271965"
+                              },
+                              "first_name": {
+                                "type": "string",
+                                "example": "first name"
+                              },
+                              "middle_name": {
+                                "type": "string",
+                                "example": "last name"
+                              },
+                              "third_name": {
+                                "type": "string",
+                                "example": "third_name"
+                              },
+                              "last_name": {
+                                "type": "string",
+                                "example": "last_name"
+                              },
+                              "preferred_name": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "address": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "postal_code": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "address_area_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "birthplace_area_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "gender_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "date_of_birth": {
+                                "type": "string",
+                                "example": "2022-08-10 12:00:00"
+                              },
+                              "date_of_death": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "nationality_id": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "identity_type_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "identity_type_name": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "identity_number": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "external_reference": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "status": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "last_login": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "photo_name": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "photo_content": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "preferred_language": {
+                                "type": "string",
+                                "example": null
+                              },
+                              "is_student": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "is_staff": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "is_guardian": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "modified_user_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "modified": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2022-01-01 10:32:20"
+                              },
+                              "created_user_id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "created": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2022-01-01 10:32:20"
+                              },
+                              "nationalities": {
+                                "type": "array",
+                                "items": {
+                                  "properties": {
+                                    "preferred": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "nationality_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "nationality_name": {
+                                      "type": "string",
+                                      "example": "Jordanian"
+                                    },
+                                    "security_user_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "modified_user_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "modified": {
+                                      "type": "string",
+                                      "format": "date",
+                                      "example": "2022-01-01 10:32:20"
+                                    },
+                                    "created_user_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "created": {
+                                      "type": "string",
+                                      "format": "date",
+                                      "example": "2022-01-01 10:32:20"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "identities": {
+                                "type": "array",
+                                "items": {
+                                  "properties": {
+                                    "identity_type_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "identity_type_name": {
+                                      "type": "string",
+                                      "example": "National Number"
+                                    },
+                                    "number": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "issue_date": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "expiry_date": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "issue_location": {
+                                      "type": "string",
+                                      "example": "Jordan"
+                                    },
+                                    "nationality_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "comments": {
+                                      "type": "string",
+                                      "example": "No comment"
+                                    },
+                                    "security_user_id": {
+                                      "type": "string",
+                                      "format": "date",
+                                      "example": "2022-01-01 10:32:20"
+                                    },
+                                    "modified_user_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "modified": {
+                                      "type": "string",
+                                      "format": "date",
+                                      "example": "2022-01-01 10:32:20"
+                                    },
+                                    "created_user_id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "created": {
+                                      "type": "string",
+                                      "format": "date",
+                                      "example": "2022-01-01 10:32:20"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              }
+                            },
+                            "type": "object"
+                          }
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update user's data",
+        "description": "Update user's data to the system.",
+        "operationId": "68334a6c05e7563854d79065f6a7977b",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "first_name",
+                  "last_name",
+                  "gender_id",
+                  "date_of_birth"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "example": "Test"
+                  },
+                  "middle_name": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "third_name": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "User"
+                  },
+                  "preferred_name": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "gender_id": {
+                    "type": "string",
+                    "example": 1
+                  },
+                  "date_of_birth": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2011-01-01"
+                  },
+                  "identity_number": {
+                    "type": "string",
+                    "example": "54542"
+                  },
+                  "nationality_id": {
+                    "type": "string",
+                    "example": "2"
+                  },
+                  "nationality_name": {
+                    "type": "string",
+                    "example": "America"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "TestUser101"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "TestUser101"
+                  },
+                  "postal_code": {
+                    "type": "string",
+                    "example": "12233"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "birthplace_area_id": {
+                    "type": "string",
+                    "example": "2"
+                  },
+                  "address_area_id": {
+                    "type": "string",
+                    "example": "2"
+                  },
+                  "identity_type_id": {
+                    "type": "string",
+                    "example": "160"
+                  },
+                  "identity_type_name": {
+                    "type": "string",
+                    "example": "Passport"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      }
+    },
+    "/api/v4/users/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user details",
+        "description": "Get user details",
+        "operationId": "df54f1d50f667eca986985e2e4b06c65",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "username": {
+                            "type": "string",
+                            "example": "admin"
+                          },
+                          "password": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "openemis_no": {
+                            "type": "string",
+                            "example": "1522271965"
+                          },
+                          "first_name": {
+                            "type": "string",
+                            "example": "first name"
+                          },
+                          "middle_name": {
+                            "type": "string",
+                            "example": "last name"
+                          },
+                          "third_name": {
+                            "type": "string",
+                            "example": "third_name"
+                          },
+                          "last_name": {
+                            "type": "string",
+                            "example": "last_name"
+                          },
+                          "preferred_name": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "address": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "postal_code": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "address_area_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "birthplace_area_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "gender_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "date_of_birth": {
+                            "type": "string",
+                            "example": "2022-08-10 12:00:00"
+                          },
+                          "date_of_death": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "nationality_id": {
+                            "type": "integer",
+                            "example": 3
+                          },
+                          "identity_type_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "identity_type_name": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "identity_number": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "external_reference": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "status": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "last_login": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "photo_name": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "photo_content": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "preferred_language": {
+                            "type": "string",
+                            "example": null
+                          },
+                          "is_student": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "is_staff": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "is_guardian": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "modified_user_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "modified": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2022-01-01 10:32:20"
+                          },
+                          "created_user_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "created": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2022-01-01 10:32:20"
+                          },
+                          "nationalities": {
+                            "type": "array",
+                            "items": {
+                              "properties": {
+                                "preferred": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "nationality_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "nationality_name": {
+                                  "type": "string",
+                                  "example": "Jordanian"
+                                },
+                                "security_user_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "modified_user_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "modified": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2022-01-01 10:32:20"
+                                },
+                                "created_user_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "created": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2022-01-01 10:32:20"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "identities": {
+                            "type": "array",
+                            "items": {
+                              "properties": {
+                                "identity_type_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "identity_type_name": {
+                                  "type": "string",
+                                  "example": "National Number"
+                                },
+                                "number": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "issue_date": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "expiry_date": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "issue_location": {
+                                  "type": "string",
+                                  "example": "Jordan"
+                                },
+                                "nationality_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "comments": {
+                                  "type": "string",
+                                  "example": "No comment"
+                                },
+                                "security_user_id": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2022-01-01 10:32:20"
+                                },
+                                "modified_user_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "modified": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2022-01-01 10:32:20"
+                                },
+                                "created_user_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "created": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2022-01-01 10:32:20"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "genderData": {
+                            "properties": {
+                              "key": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "value": {
+                                "type": "string",
+                                "example": "Male"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "institution": {
+                            "properties": {
+                              "key": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "value": {
+                                "type": "string",
+                                "example": ""
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "educationGrade": {
+                            "properties": {
+                              "key": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "value": {
+                                "type": "string",
+                                "example": ""
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "studentStatus": {
+                            "properties": {
+                              "key": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "value": {
+                                "type": "string",
+                                "example": ""
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsuccessful."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Examinations",
+      "description": "Examinations"
+    },
+    {
+      "name": "Assessment",
+      "description": "Assessment"
+    },
+    {
+      "name": "Attendance",
+      "description": "Attendance"
+    },
+    {
+      "name": "Student Attendance Archive",
+      "description": "Student Attendance Archive"
+    },
+    {
+      "name": "Authentication",
+      "description": "Authentication"
+    },
+    {
+      "name": "Directory",
+      "description": "Directory"
+    },
+    {
+      "name": "Education Structure",
+      "description": "Education Structure"
+    },
+    {
+      "name": "Institutions",
+      "description": "Institutions"
+    },
+    {
+      "name": "Users",
+      "description": "Users"
+    },
+    {
+      "name": "Meals",
+      "description": "Meals"
+    },
+    {
+      "name": "Academic Period",
+      "description": "Academic Period"
+    },
+    {
+      "name": "Nationalities",
+      "description": "Nationalities"
+    },
+    {
+      "name": "Identity types",
+      "description": "Identity types"
+    },
+    {
+      "name": "Institution Grades",
+      "description": "Institution Grades"
+    },
+    {
+      "name": "Areas",
+      "description": "Areas"
+    },
+    {
+      "name": "Miscellaneous",
+      "description": "Miscellaneous"
+    },
+    {
+      "name": "Report card",
+      "description": "Report card"
+    },
+    {
+      "name": "Scanned",
+      "description": "Scanned"
+    },
+    {
+      "name": "Institution time table",
+      "description": "Institution time table"
+    },
+    {
+      "name": "Surveys",
+      "description": "Surveys"
+    },
+    {
+      "name": "System Configuration",
+      "description": "System Configuration"
+    },
+    {
+      "name": "Textbook",
+      "description": "Textbook"
+    },
+    {
+      "name": "Themes",
+      "description": "Themes"
+    },
+    {
+      "name": "Schedule",
+      "description": "Schedule"
+    },
+    {
+      "name": "Training",
+      "description": "Training"
+    },
+    {
+      "name": "Username",
+      "description": "Username"
+    },
+    {
+      "name": "Guardians",
+      "description": "Guardians"
+    },
+    {
+      "name": "Email",
+      "description": "Email"
+    },
+    {
+      "name": "Workbench",
+      "description": "Workbench"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sanctum": {
+        "type": "http",
+        "description": "Enter token in format (Bearer <token>)",
+        "name": "Authorization",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "sanctum": []
+    }
+  ]
+}

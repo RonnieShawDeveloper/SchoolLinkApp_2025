@@ -1,0 +1,6 @@
+/* You can add component-specific styles here. */
+/* The TailwindCSS classes in the HTML will handle most of the styling. */
+/* This file is for any overrides or custom CSS you might need. */
+body {
+  background-color: #f0f2f5; /* A light grey background for the page */
+}

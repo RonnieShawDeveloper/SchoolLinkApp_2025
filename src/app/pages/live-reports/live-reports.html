@@ -1,0 +1,52 @@
+<div class="p-4">
+  <h2 class="text-3xl font-bold mb-6 text-center">Live Attendance Reports</h2>
+
+  <!-- School-Wide Statistics -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-green-100 p-6 rounded-lg shadow-md text-center">
+      <h3 class="text-xl font-semibold text-green-800">Present</h3>
+      <p class="text-5xl font-bold text-green-600">{{ presentCount }}</p>
+    </div>
+    <div class="bg-red-100 p-6 rounded-lg shadow-md text-center">
+      <h3 class="text-xl font-semibold text-red-800">Absent</h3>
+      <p class="text-5xl font-bold text-red-600">{{ absentCount }}</p>
+    </div>
+    <div class="bg-yellow-100 p-6 rounded-lg shadow-md text-center">
+      <h3 class="text-xl font-semibold text-yellow-800">Tardy</h3>
+      <p class="text-5xl font-bold text-yellow-600">{{ tardyCount }}</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Absent Students List -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h3 class="text-2xl font-semibold mb-4 text-red-700">Absent Students Today</h3>
+      <ul *ngIf="absentStudents.length > 0; else noAbsent" class="list-disc pl-5">
+        <li *ngFor="let student of absentStudents"
+            class="text-lg py-1 cursor-pointer hover:text-red-500 transition-colors"
+            (click)="showStudentDetails(student)">
+          {{ student.first_name }} {{ student.last_name }} ({{ student.openemis_no }})
+        </li>
+      </ul>
+      <ng-template #noAbsent>
+        <p class="text-gray-600">No students marked absent today.</p>
+      </ng-template>
+    </div>
+
+    <!-- Tardy Students List -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h3 class="text-2xl font-semibold mb-4 text-yellow-700">Tardy Students Today</h3>
+      <ul *ngIf="tardyStudents.length > 0; else noTardy" class="list-disc pl-5">
+        <li *ngFor="let student of tardyStudents"
+            class="text-lg py-1 cursor-pointer hover:text-yellow-500 transition-colors"
+            (click)="showStudentDetails(student)">
+          {{ student.first_name }} {{ student.last_name }} ({{ student.openemis_no }})
+          <span *ngIf="student.tardyReason" class="text-sm text-gray-500"> - {{ student.tardyReason }}</span>
+        </li>
+      </ul>
+      <ng-template #noTardy>
+        <p class="text-gray-600">No students marked tardy today.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

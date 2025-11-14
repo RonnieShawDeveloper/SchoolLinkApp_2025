@@ -1,0 +1,14 @@
+<div class="p-4 relative">
+
+
+  <div class="scanner-container">
+    <zxing-scanner [enable]="scannerEnabled" (scanSuccess)="scanSuccess($event)"></zxing-scanner>
+    <div class="scanner-overlay">
+      <div class="scanner-box"></div>
+    </div>
+  </div>
+
+  <p class="text-center text-lg font-semibold mt-4">
+    Please align the QR Code on the student ID in the camera window to scan.
+  </p>
+</div>

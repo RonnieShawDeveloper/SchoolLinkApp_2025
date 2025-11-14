@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+@import "ngx-bootstrap/datepicker/bs-datepicker.css";
+
+/* Override ngx-bootstrap datepicker header color */
+.bs-datepicker-head {
+  background-color: #3b82f6 !important; /* A nice blue color */
+}
+
+/* Add margin to the bottom of the datepicker container */
+.bs-datepicker-container {
+  margin-bottom: 50px !important;
+}
+

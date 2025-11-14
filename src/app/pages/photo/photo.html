@@ -1,0 +1,101 @@
+<div class="p-4">
+  <div *ngIf="currentView === 'search'">
+
+    <img src="/images/logo_main.jpg" alt="Ministry of Education Logo" class="mt-[10px] mb-[20px] mx-auto">
+    <p class="text-center mb-4">Search for a student by Last Name, First Name, or Date of Birth.</p>
+
+    <div *ngIf="!showSearchResults" class="flex flex-col items-center gap-4 mb-4">
+      <div>
+        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+        <input id="lastName" [(ngModel)]="search.lastName" placeholder="Last Name" class="p-2 border rounded w-full max-w-xs">
+      </div>
+      <div>
+        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+        <input id="firstName" [(ngModel)]="search.firstName" placeholder="First Name" class="p-2 border rounded w-full max-w-xs">
+      </div>
+      <div>
+        <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+        <input id="dob" [(ngModel)]="search.dob" placeholder="Date of Birth" class="p-2 border rounded w-full max-w-xs" bsDatepicker>
+      </div>
+      <button (click)="searchStudents()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full max-w-xs">
+        Search
+      </button>
+    </div>
+
+    <div *ngIf="showSearchResults" class="mt-4">
+      <p class="text-center mb-4">Select a student from the list below, or perform a new search.</p>
+      <div *ngIf="searchResults.length > 0">
+        <h2 class="text-xl font-semibold mb-2">Search Results</h2>
+        <ul class="bg-white shadow overflow-hidden sm:rounded-md max-w-md mx-auto">
+          <li *ngFor="let student of searchResults" (click)="selectStudent(student)" class="block cursor-pointer hover:bg-gray-50">
+            <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-indigo-600 truncate">{{ student.last_name }}, {{ student.first_name }}</p>
+                <div class="ml-2 flex-shrink-0 flex">
+                  <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    {{ student.institution.value }}
+                  </p>
+                </div>
+              </div>
+              <div class="mt-2 sm:flex justify-between">
+                <div class="sm:flex">
+                  <p class="flex items-center text-sm text-gray-500">
+                    DOB: {{ student.date_of_birth | date:'shortDate' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="searched && searchResults.length === 0" class="mt-4 text-center text-gray-500">
+        No students found matching your criteria.
+      </div>
+      <div class="flex justify-center mt-4">
+        <button (click)="newSearch()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+          New Search
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentView === 'student'">
+
+    <div *ngIf="selectedStudent" class="flex flex-col items-center">
+      <h2 class="text-2xl font-bold mb-4">{{ selectedStudent.first_name }} {{ selectedStudent.last_name }}</h2>
+      <img *ngIf="selectedStudent.photo_content" [src]="studentPhoto" alt="Student Photo" class="w-64 h-64 object-cover rounded-lg shadow-md mb-4">
+      <div *ngIf="!selectedStudent.photo_content" class="w-64 h-64 flex items-center justify-center bg-gray-200 rounded-lg shadow-md mb-4 text-center text-gray-500 font-semibold">
+        NO STUDENT PHOTO AVAILABLE
+      </div>
+      <p><strong>School:</strong> {{ selectedStudent.institution.value }}</p>
+      <p><strong>Grade:</strong> N/A (Grade information not available)</p>
+      <p><strong>Date of Birth:</strong> {{ selectedStudent.date_of_birth | date:'longDate' }}</p>
+      <p><strong>EMIS No:</strong> {{ selectedStudent.openemis_no }}</p>
+
+      <div class="mt-4">
+        <button (click)="showCaptureView()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+          {{ newPhoto ? 'Retake Photo' : 'Take New Photo' }}
+        </button>
+        <button (click)="savePhoto()" [disabled]="!newPhoto" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
+          Save Photo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentView === 'capture'">
+
+    <div class="flex flex-col items-center">
+        <h2 class="text-2xl font-bold mb-4">Take Photo</h2>
+        <div class="relative w-full max-w-md aspect-square">
+            <zxing-scanner #scanner (camerasFound)="onCamerasFound($event)" [device]="selectedDevice" (scanError)="onScanError($event)"></zxing-scanner>
+            <div class="absolute top-0 left-0 w-full h-full bg-no-repeat bg-center" style="background-image: url('/images/face-overlay.svg'); background-size: 100% 100%;"></div>
+            <canvas #canvas class="hidden"></canvas>
+        </div>
+        <p class="text-sm text-gray-600 mt-2 mb-4 text-center">Please center the students face and top of shoulders in the preview window</p>
+        <button (click)="capturePhoto()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Capture
+        </button>
+    </div>
+  </div>
+</div>

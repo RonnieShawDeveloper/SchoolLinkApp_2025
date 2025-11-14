@@ -1,0 +1,67 @@
+<div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
+
+  @if (showInstallSuccess()) {
+    <div class="text-center text-green-700">
+      <h1 class="text-2xl font-bold">Installation Complete!</h1>
+      <svg class="mx-auto my-4 w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <p class="text-lg">The SchoolLink app has been successfully installed on your device.</p>
+      <div class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+        <p class="font-bold text-xl">Please close this browser and open the app from your device's home screen or app list.</p>
+      </div>
+      <div class="mt-6 text-sm text-gray-500">
+        <p>Having trouble? Or did you uninstall the app?</p>
+        <button (click)="reset()" class="mt-2 text-blue-600 hover:underline">Click here to reset installation status</button>
+      </div>
+    </div>
+  } @else {
+    @if (isDesktop()) {
+      <div class="text-center">
+        <h1 class="text-2xl font-bold text-red-600">Desktop Access Not Supported</h1>
+        <img src="icons/icon-192x192.png" alt="App Icon" class="mx-auto my-4 w-24 h-24">
+        <p class="text-gray-700">
+          This application is designed for mobile devices and must be installed on your phone or tablet.
+        </p>
+        <div class="mt-4 p-4 bg-gray-100 rounded-lg">
+          <p class="font-semibold">Please open your mobile device's web browser and go to:</p>
+          <p class="text-lg font-mono text-blue-600 break-all">https://schoollinkapp.web.app</p>
+        </div>
+      </div>
+    } @else {
+      <div class="text-center">
+        <h1 class="text-2xl font-bold text-gray-800">Install SchoolLink App</h1>
+        <p class="text-gray-600 mt-2">To use this application, you must install it to your device's home screen.</p>
+        <img src="icons/icon-192x192.png" alt="App Icon" class="mx-auto my-4 w-24 h-24">
+      </div>
+
+      @if (canInstall()) {
+        <button (click)="installPwa()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg">
+          Install Application
+        </button>
+        <div class="text-center text-sm text-gray-500">
+          <p>Click the button above for a quick installation.</p>
+        </div>
+      }
+
+      <div class="space-y-4 text-gray-700">
+        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">Manual Installation</h2>
+        <div class="p-3 bg-gray-50 rounded-lg">
+          <p class="font-bold">For Android / Chrome users:</p>
+          <p>Tap the three dots (⋮) in the top-right corner of your browser, then look for and select "Install app" or "Add to Home Screen" from the menu.</p>
+        </div>
+        <div class="p-3 bg-gray-50 rounded-lg">
+          <p class="font-bold">For iPhone / iOS users:</p>
+          <ol class="list-decimal list-inside space-y-1">
+            <li>Tap the "Share" button in your browser's toolbar.</li>
+            <li>Scroll down and tap "Add to Home Screen".</li>
+            <li>Confirm by tapping "Add" in the top-right corner.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="text-center mt-6">
+        <p class="font-semibold text-gray-800">After installation, please close this browser window and open the app from your device. The app icon can be found on your home screen or in your device's main applications list.</p>
+      </div>
+    }
+  }
+
+</div>

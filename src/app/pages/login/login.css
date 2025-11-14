@@ -1,0 +1,16 @@
+:root {
+  --bahamas-blue: #0077be;
+  --bahamas-yellow: #ffc72c;
+  --bahamas-black: #000000;
+}
+
+.bg-gray-100 {
+  background-color: #f0f8ff; /* Light Alice Blue */
+}
+
+.bg-white {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+
+

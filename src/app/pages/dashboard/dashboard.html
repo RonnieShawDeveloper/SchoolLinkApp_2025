@@ -1,0 +1,42 @@
+<div class="flex flex-col items-center p-4">
+  <img src="/images/logo_main.jpg" alt="Ministry of Education Logo" class="mt-[10px] mb-[20px]">
+
+  <div class="flex flex-col items-center w-full max-w-4xl flex-grow">
+    <div class="text-xl font-semibold mb-8">Please Select a Function</div>
+    <div class="flex w-full">
+      <!-- Scanner Button -->
+      <div class="w-1/2 p-4">
+        <div (click)="goToScanner()" class="bg-gray-200 rounded-lg shadow-lg p-8 border border-gray-400 text-center cursor-pointer hover:shadow-xl transition-shadow">
+          <div class="text-6xl mb-4">📠</div>
+          <div class="text-2xl font-semibold">Scanner</div>
+        </div>
+      </div>
+
+      <!-- Photos Button -->
+      <div class="w-1/2 p-4">
+        <div (click)="goToPhotos()" class="bg-gray-200 rounded-lg shadow-lg p-8 border border-gray-400 text-center cursor-pointer hover:shadow-xl transition-shadow">
+          <div class="text-6xl mb-4">📷</div>
+          <div class="text-2xl font-semibold">Photos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full mt-4">
+      <!-- Live Reports Button -->
+      <div class="w-1/2 p-4">
+        <div (click)="goToLiveReports()" class="bg-gray-200 rounded-lg shadow-lg p-8 border border-gray-400 text-center cursor-pointer hover:shadow-xl transition-shadow">
+          <div class="text-6xl mb-4">📊</div>
+          <div class="text-2xl font-semibold">Live Reports</div>
+        </div>
+      </div>
+
+      <!-- Manual Entry Button -->
+      <div class="w-1/2 p-4">
+        <div (click)="goToManualEntry()" class="bg-gray-200 rounded-lg shadow-lg p-8 border border-gray-400 text-center cursor-pointer hover:shadow-xl transition-shadow">
+          <div class="text-6xl mb-4">📝</div>
+          <div class="text-2xl font-semibold">Manual Entry</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

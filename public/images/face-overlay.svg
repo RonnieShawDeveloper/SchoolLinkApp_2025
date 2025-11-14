@@ -1,0 +1,6 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="white" stroke-width="10">
+  <!-- Head outline, shifted up -->
+  <path d="M250 40 C160 40 100 170 100 250 C100 350 250 400 250 400 C250 400 400 350 400 250 C400 170 340 40 250 40 Z" stroke-dasharray="20,10" stroke-linecap="round"/>
+  <!-- Shoulders outline, shifted up -->
+  <path d="M100 400 C50 400 50 450 50 450 L450 450 C450 450 450 400 400 400" stroke-dasharray="20,10" stroke-linecap="round"/>
+</svg>
