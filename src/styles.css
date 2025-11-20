@@ -1,13 +1,86 @@
-/* You can add global styles to this file, and also import other style files */
-@import "ngx-bootstrap/datepicker/bs-datepicker.css";
+/* Global base (Tailwind is used for most styling) */
+/* Bright text + high-contrast forms for dark surfaces */
 
-/* Override ngx-bootstrap datepicker header color */
-.bs-datepicker-head {
-  background-color: #3b82f6 !important; /* A nice blue color */
+/* Wrapper applied around routed content in app.html */
+.app-bright-text {
+  color: #f1f5f9; /* slate-100 */
 }
 
-/* Add margin to the bottom of the datepicker container */
-.bs-datepicker-container {
-  margin-bottom: 50px !important;
+/* Make common text elements bright for readability on dark backgrounds */
+.app-bright-text :where(p, label, span, li, small, strong, em, dt, dd) {
+  color: #e5f2ff !important; /* light, slightly blue tint for contrast */
+}
+
+.app-bright-text :where(h1) { color: #ffffff !important; }
+.app-bright-text :where(h2) { color: #f8fafc !important; }
+.app-bright-text :where(h3, h4, h5, h6) { color: #e2e8f0 !important; }
+
+/* Links on dark */
+.app-bright-text a { color: #93c5fd; }
+.app-bright-text a:hover { color: #bfdbfe; }
+
+/* Form controls – high contrast on dark backgrounds */
+.app-bright-text input[type="text"],
+.app-bright-text input[type="password"],
+.app-bright-text input[type="email"],
+.app-bright-text input[type="date"],
+.app-bright-text input[type="number"],
+.app-bright-text input[type="tel"],
+.app-bright-text select,
+.app-bright-text textarea {
+  background-color: rgba(2, 6, 23, 0.6); /* slate-950 with translucency */
+  color: #f8fafc; /* white-ish text */
+  border: 1px solid rgba(148, 163, 184, 0.6); /* slate-400 */
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 0.625rem 0.875rem; /* ~py-2.5 px-3.5 */
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 0 0 9999px rgba(255,255,255,0.0);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.app-bright-text input::placeholder,
+.app-bright-text textarea::placeholder {
+  color: #94a3b8; /* slate-400 */
+}
+
+.app-bright-text input:focus,
+.app-bright-text select:focus,
+.app-bright-text textarea:focus {
+  border-color: #60a5fa; /* blue-400 */
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35); /* focus ring */
+  background-color: rgba(2, 6, 23, 0.7);
+}
+
+/* Disabled state */
+.app-bright-text input:disabled,
+.app-bright-text select:disabled,
+.app-bright-text textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Light surface exceptions: keep dark text inside light cards/elements */
+.app-bright-text :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-slate-50, .bg-slate-100, .bg-slate-200, .bg-white\/70, .bg-white\/80) {
+  color: #0f172a !important; /* slate-900 */
+}
+
+.app-bright-text :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-slate-50, .bg-slate-100, .bg-slate-200, .bg-white\/70, .bg-white\/80) :where(p, label, span, li, small, strong, em, dt, dd) {
+  color: #334155 !important; /* slate-700 */
+}
+
+.app-bright-text :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-slate-50, .bg-slate-100, .bg-slate-200) input,
+.app-bright-text :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-slate-50, .bg-slate-100, .bg-slate-200) select,
+.app-bright-text :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-slate-50, .bg-slate-100, .bg-slate-200) textarea {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1; /* slate-300 */
+}
+
+/* Rounded corners on the main logo used across the app */
+img[src$="/images/logo_main.jpg"],
+img[src$="images/logo_main.jpg"],
+img[src$="logo_main.jpg"] {
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
 }
 

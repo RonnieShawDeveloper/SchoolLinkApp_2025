@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'; // Import BsDatepickerModule
 import { EmisService } from '../../services/emis.service';
 import Swal from 'sweetalert2';
+import { DatePickerComponent } from '../../components/date-picker/date-picker';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface MockStudent {
   openemis_no: string;
@@ -23,7 +24,7 @@ interface MockStudent {
 @Component({
   selector: 'app-manual-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule], // Add FormsModule and BsDatepickerModule here
+  imports: [CommonModule, FormsModule, DatePickerComponent], // Add FormsModule and custom DatePicker
   templateUrl: './manual-entry.html',
   styleUrl: './manual-entry.css',
 })
@@ -35,11 +36,16 @@ export class ManualEntryComponent implements OnInit {
   foundStudents: MockStudent[] = [];
   selectedStudent: MockStudent | null = null;
   searched: boolean = false;
+  selectedSchool: string | null = null;
+  fromScanner = false;
 
-  constructor(private emisService: EmisService) {}
+  constructor(private emisService: EmisService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    // Optionally load all students on init or keep it empty until search
+    this.route.queryParamMap.subscribe(params => {
+      this.selectedSchool = params.get('school');
+      this.fromScanner = params.get('fromScanner') === 'true';
+    });
   }
 
   searchStudents(): void {
@@ -103,6 +109,25 @@ export class ManualEntryComponent implements OnInit {
       }
     }
 
+    // If selected school context exists and doesn't match student's school, require a reason
+    if (this.selectedSchool && this.selectedStudent.institution.value !== this.selectedSchool) {
+      const { value: mismatchReason } = await Swal.fire({
+        title: 'School Mismatch',
+        html: `The selected location is <b>${this.selectedSchool}</b>, but the student is enrolled at <b>${this.selectedStudent.institution.value}</b>.<br/><br/>Please provide a reason (e.g., Visiting, Transferring).`,
+        input: 'text',
+        inputLabel: 'Reason',
+        inputPlaceholder: 'Visiting / Transferring / Special permission',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        inputValidator: (value) => {
+          if (!value) { return 'Reason is required to proceed.'; }
+          return null;
+        }
+      });
+      if (!mismatchReason) { return; }
+      reason = reason ? `${reason}; ${mismatchReason}` : mismatchReason;
+    }
+
     const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     this.emisService.recordAttendance({
       student_openemis_no: this.selectedStudent.openemis_no,
@@ -118,6 +143,11 @@ export class ManualEntryComponent implements OnInit {
           this.selectedStudent.attendanceHistory.push(newRecord);
           this.selectedStudent.status = status;
           this.selectedStudent.tardyReason = status === 'Tardy' ? reason : undefined;
+        }
+
+        // If came from scanner flow, return to scanner for the same school
+        if (this.fromScanner && this.selectedSchool) {
+          this.router.navigate(['/scanner', this.selectedSchool]);
         }
       } else {
         Swal.fire('Error', 'Failed to record attendance.', 'error');

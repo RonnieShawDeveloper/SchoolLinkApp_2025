@@ -40,3 +40,29 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 ### Building
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+### Deploy to Firebase Hosting
+
+Prerequisites:
+- You have a Firebase project (project ID appears in the Firebase Console).
+- You are logged in with the Firebase CLI on your machine: `npm i -g firebase-tools` (or use `npx` as shown below) and `firebase login`.
+- The included `.firebaserc` maps the hosting target `schoollinkapp` to the project `bbms-1283c`. If your Firebase project ID differs, update `.firebaserc` accordingly or run the target command in the steps below.
+
+Quick deploy (uses npx so you don't need a global install):
+- Production deploy to the configured hosting target:
+  1. `npm run deploy`
+     - This runs `ng build` and then `npx firebase-tools deploy --only hosting:schoollinkapp`.
+
+- Preview deploy (temporary URL via Firebase Hosting channels):
+  1. `npm run deploy:preview`
+     - This runs `ng build` and then `npx firebase-tools hosting:channel:deploy`.
+
+If you need to point the hosting target to your own Firebase project ID:
+1. `firebase login` (if not already logged in)
+2. `firebase use <your-project-id>` (optional, to set the default project locally)
+3. `firebase target:apply hosting schoollinkapp <your-project-id>`
+
+Notes:
+- The app is configured as an Angular PWA with service worker (`ngsw-config.json`).
+- `firebase.json` sets `public` to `dist/school-link-app/browser` and rewrites all routes to `/index.html` for SPA routing.
+- Cache headers are set to `no-cache` for easier updates; you can adjust these in `firebase.json` if desired.

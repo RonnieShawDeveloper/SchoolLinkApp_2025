@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router'; // Import ActivatedRoute
+import { ActivatedRoute, Router } from '@angular/router'; // Import ActivatedRoute
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ZXingScannerModule, ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EmisService } from '../../services/emis.service';
+import { DatePickerComponent } from '../../components/date-picker/date-picker';
 
 @Component({
   selector: 'app-photo',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FormsModule, ZXingScannerModule, BsDatepickerModule],
+  imports: [CommonModule, FormsModule, ZXingScannerModule, DatePickerComponent],
   templateUrl: './photo.html',
   styleUrl: './photo.css',
 })

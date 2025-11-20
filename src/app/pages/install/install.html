@@ -15,15 +15,23 @@
     </div>
   } @else {
     @if (isDesktop()) {
-      <div class="text-center">
-        <h1 class="text-2xl font-bold text-red-600">Desktop Access Not Supported</h1>
-        <img src="icons/icon-192x192.png" alt="App Icon" class="mx-auto my-4 w-24 h-24">
-        <p class="text-gray-700">
-          This application is designed for mobile devices and must be installed on your phone or tablet.
+      <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 rounded-xl shadow-lg p-8 border border-blue-200">
+        <img src="/icons/icon-192x192.png" alt="App Icon" class="w-24 h-24 mb-6 drop-shadow-lg">
+        <h1 class="text-3xl font-extrabold text-blue-900 mb-2 tracking-tight">SchoolLink App</h1>
+        <h2 class="text-xl font-semibold text-red-700 mb-4">Desktop Installation Not Supported</h2>
+        <p class="text-lg text-gray-700 mb-6 text-center max-w-md">
+          This application is designed to be installed and used on a mobile device for the best experience. Please open this site on your phone or tablet to install the SchoolLink App.
         </p>
-        <div class="mt-4 p-4 bg-gray-100 rounded-lg">
-          <p class="font-semibold">Please open your mobile device's web browser and go to:</p>
-          <p class="text-lg font-mono text-blue-600 break-all">https://schoollinkapp.web.app</p>
+        <div class="bg-white/80 border border-blue-200 rounded-lg p-4 mb-4 shadow">
+          <span class="block text-gray-800 font-semibold mb-1">To install:</span>
+          <ol class="list-decimal list-inside text-gray-700 text-left">
+            <li>On your mobile device, open your browser and go to:</li>
+            <li class="font-mono text-blue-700 text-lg break-all">https://schoollinkapp.web.app</li>
+            <li>Follow the instructions to add the app to your home screen.</li>
+          </ol>
+        </div>
+        <div class="mt-4 text-gray-500 text-sm text-center">
+          <span class="block">Need help? Contact your system administrator for support.</span>
         </div>
       </div>
     } @else {

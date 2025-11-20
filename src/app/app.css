@@ -8,6 +8,12 @@ main {
   flex-grow: 1;
   padding-bottom: 60px; /* Add padding to prevent footer overlap */
   overflow-y: auto;
+  position: relative; /* Added for router animations */
+  overflow: hidden; /* Added for router animations */
+}
+
+router-outlet {
+  display: block; /* Ensure router-outlet is a block element for animations */
 }
 
 footer {

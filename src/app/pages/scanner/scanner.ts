@@ -55,14 +55,101 @@ export class ScannerComponent implements OnInit {
           imageHeight: 200,
           imageAlt: 'Student Photo',
           showCancelButton: true,
-          confirmButtonText: 'Accept',
-          cancelButtonText: 'Reject',
+          showDenyButton: true,
+          confirmButtonText: 'Check-In',
+          denyButtonText: 'Tardy',
+          cancelButtonText: 'Cancel',
           reverseButtons: true
-        }).then((result) => {
+        }).then(async (result) => {
           if (result.isConfirmed) {
-            console.log('Student accepted');
+            // If school mismatch, require reason
+            if (this.schoolName && student.institution.value !== this.schoolName) {
+              const { value: reason } = await Swal.fire({
+                title: 'School Mismatch',
+                html: `Current location: <b>${this.schoolName}</b><br/>Student enrolled at: <b>${student.institution.value}</b><br/><br/>Provide reason (Visiting, Transferring, etc.)`,
+                input: 'text',
+                inputPlaceholder: 'Reason required',
+                showCancelButton: true,
+                confirmButtonText: 'Record',
+                inputValidator: (value) => {
+                  if (!value) return 'Reason is required';
+                  return null;
+                }
+              });
+              if (!reason) {
+                // User cancelled; just re-enable scanner below
+              } else {
+                const today = new Date().toISOString().slice(0,10);
+                this.emisService.recordAttendance({
+                  student_openemis_no: student.openemis_no,
+                  date: today,
+                  status: 'Present',
+                  reason: reason
+                }).subscribe();
+              }
+            } else {
+              // Record attendance as Present without extra reason
+              const today = new Date().toISOString().slice(0,10);
+              this.emisService.recordAttendance({
+                student_openemis_no: student.openemis_no,
+                date: today,
+                status: 'Present'
+              }).subscribe();
+            }
+          } else if (result.isDenied) {
+            // Mark as Tardy; require tardy reason, also handle school mismatch reason
+            const { value: tardyReason } = await Swal.fire({
+              title: 'Tardy Reason',
+              input: 'text',
+              inputPlaceholder: 'e.g., Late Bus, Appointment, Traffic',
+              showCancelButton: true,
+              confirmButtonText: 'Continue',
+              inputValidator: (value) => {
+                if (!value) return 'Reason is required for Tardy';
+                return null;
+              }
+            });
+            if (!tardyReason) {
+              // cancelled entering tardy reason; do nothing further
+            } else {
+              let finalReason = tardyReason;
+              if (this.schoolName && student.institution.value !== this.schoolName) {
+                const { value: mismatchReason } = await Swal.fire({
+                  title: 'School Mismatch',
+                  html: `Current location: <b>${this.schoolName}</b><br/>Student enrolled at: <b>${student.institution.value}</b><br/><br/>Provide reason (Visiting, Transferring, etc.)`,
+                  input: 'text',
+                  inputPlaceholder: 'Reason required',
+                  showCancelButton: true,
+                  confirmButtonText: 'Record',
+                  inputValidator: (value) => {
+                    if (!value) return 'Reason is required';
+                    return null;
+                  }
+                });
+                if (!mismatchReason) {
+                  // cancelled mismatch reason; abort recording
+                } else {
+                  finalReason = `${tardyReason}; ${mismatchReason}`;
+                  const today = new Date().toISOString().slice(0,10);
+                  this.emisService.recordAttendance({
+                    student_openemis_no: student.openemis_no,
+                    date: today,
+                    status: 'Tardy',
+                    reason: finalReason
+                  }).subscribe();
+                }
+              } else {
+                const today = new Date().toISOString().slice(0,10);
+                this.emisService.recordAttendance({
+                  student_openemis_no: student.openemis_no,
+                  date: today,
+                  status: 'Tardy',
+                  reason: finalReason
+                }).subscribe();
+              }
+            }
           } else if (result.dismiss === Swal.DismissReason.cancel) {
-            console.log('Student rejected');
+            // Cancel: do nothing, just close and resume scanning
           }
           // Re-enable scanner for the next scan
           setTimeout(() => {
@@ -88,5 +175,18 @@ export class ScannerComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/attendance']);
+  }
+
+  goToManualEntry(): void {
+    const school = this.schoolName || '';
+    // Pause scanner to release camera while navigating
+    this.scannerEnabled = false;
+    this.router.navigate(['/manual-entry'], { queryParams: { school, fromScanner: true } });
+  }
+
+  exitToDashboard(): void {
+    // Disable scanner and go back to dashboard
+    this.scannerEnabled = false;
+    this.router.navigate(['/dashboard']);
   }
 }

@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "npm run build && npx firebase-tools deploy --only hosting:schoollinkapp",
+    "deploy:preview": "npm run build && npx firebase-tools hosting:channel:deploy"
   },
   "prettier": {
     "overrides": [
@@ -20,6 +22,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "20.3.10",
     "@angular/common": "^20.1.0",
     "@angular/compiler": "^20.1.0",
     "@angular/core": "^20.1.0",
@@ -27,10 +30,12 @@
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
     "@angular/service-worker": "^20.1.0",
+    "ng-particles": "^3.12.0",
     "@zxing/ngx-scanner": "^20.0.0",
-    "ngx-bootstrap": "^20.0.2",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.26.3",
+    "tsparticles": "^2.12.0",
+    "tsparticles-engine": "^2.12.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

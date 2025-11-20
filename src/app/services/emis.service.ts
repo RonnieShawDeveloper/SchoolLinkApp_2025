@@ -213,19 +213,14 @@ export class EmisService {
 
   verifyStudent(qrCodeData: string, schoolName: string): Observable<MockStudent> {
     console.log(`Verifying QR Code: ${qrCodeData} for school: ${schoolName}`);
-    const foundStudent = this.mockStudents.find(student => student.openemis_no === qrCodeData);
-
-    if (foundStudent) {
-      // Simulate fetching the photo content if it's null
-      if (!foundStudent.photo_content) {
-        // Placeholder for base64 content of public/images/student-test-photo.jpg
-        const studentTestPhotoBase64 = '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHgBLADASIAEBAAH/xAAfAAABBQEBAQEBAQEAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQIEAwQFBQQEAAABfQECAAMRBAUhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkBQoWFxgZGiQqJScpKTQyNjc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eXm5+jp6uvs7e7v8fHz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYVEiJTYXHR<ctrl63>'; // Full base64 string
-        foundStudent.photo_content = studentTestPhotoBase64;
-      }
-      return of(foundStudent).pipe(delay(2500));
-    } else {
-      return throwError(() => new Error('Student not found'));
+    // Deterministically select a mock student regardless of QR contents
+    let index = 0;
+    if (qrCodeData) {
+      // Simple hash to spread selections
+      index = Array.from(qrCodeData).reduce((acc, ch) => (acc + ch.charCodeAt(0)) % this.mockStudents.length, 0);
     }
+    const selected = this.mockStudents[index] || this.mockStudents[0];
+    return of(selected).pipe(delay(1200));
   }
 
   private generateFakeToken(username: string): string {

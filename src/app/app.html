@@ -1,12 +1,14 @@
+<app-animated-background></app-animated-background>
+
 @if (!isLoginPage) {
-  <header class="sticky top-0 z-50 bg-gray-800 text-white shadow-md">
+  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 text-gray-900 shadow-lg">
     <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
       <div class="flex items-center">
-        <img src="/icons/icon-128x128.png" alt="SchoolLink Logo" class="h-10 w-10 mr-3">
-        <a class="text-xl font-bold" href="#">SchoolLink</a>
+        <img src="/icons/icon-128x128.png" alt="SchoolLink Logo" class="h-10 w-10 mr-3 rounded-xl shadow">
+        <a class="text-xl font-bold tracking-tight" href="#">SchoolLink</a>
       </div>
       <div>
-        <button (click)="logout()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        <button (click)="logout()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl shadow">
           Logout
         </button>
       </div>
@@ -14,16 +16,22 @@
   </header>
 }
 
-<main class="container mx-auto p-4">
+<main class="relative container mx-auto p-4 z-10">
   @if (!showInstallScreen()) {
-    <router-outlet></router-outlet>
+    <div class="rounded-2xl shadow-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur supports-[backdrop-filter]:bg-white/50 border border-white/20 overflow-hidden app-bright-text">
+      <router-outlet #outlet="outlet" [@routeAnimations]="prepareRoute(outlet)"></router-outlet>
+    </div>
   } @else {
-    <app-install></app-install>
+    <div class="rounded-2xl shadow-2xl bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border border-white/20 overflow-hidden app-bright-text">
+      <app-install></app-install>
+    </div>
   }
+  <div class="pointer-events-none fixed inset-x-0 bottom-24 mx-auto h-32 w-[90%] rounded-3xl bg-white/10 blur-3xl"></div>
+  <div class="pointer-events-none fixed inset-x-0 top-24 mx-auto h-32 w-[75%] rounded-3xl bg-fuchsia-500/5 blur-3xl"></div>
 </main>
 
 @if (!isLoginPage) {
-  <footer class="sticky bottom-0 z-50 bg-gray-200 text-center text-xs p-3 w-full">
+  <footer class="sticky bottom-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/70 text-gray-700 text-center text-xs p-3 w-full shadow-2xl">
     &copy; 2025 SchoolLink App. All Rights Reserved.
   </footer>
 }

@@ -13,9 +13,9 @@
         <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
         <input id="firstName" [(ngModel)]="search.firstName" placeholder="First Name" class="p-2 border rounded w-full max-w-xs">
       </div>
-      <div>
-        <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth</label>
-        <input id="dob" [(ngModel)]="search.dob" placeholder="Date of Birth" class="p-2 border rounded w-full max-w-xs" bsDatepicker>
+      <div class="w-full max-w-xs">
+        <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth (dd/mm/yyyy)</label>
+        <app-date-picker [(ngModel)]="search.dob" placeholder="DD/MM/YYYY"></app-date-picker>
       </div>
       <button (click)="searchStudents()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full max-w-xs">
         Search
