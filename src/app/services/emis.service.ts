@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, finalize } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of, throwError, firstValueFrom } from 'rxjs';
+import { catchError, map, tap, finalize } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
-interface AttendanceRecord {
+// Interfaces matching the App's needs (mapped from API)
+export interface AttendanceRecord {
   date: string;
   status: 'Present' | 'Absent' | 'Tardy';
   reason?: string;
 }
 
-interface MockStudent {
+export interface Student {
   openemis_no: string;
   first_name: string;
   middle_name: string;
@@ -29,169 +31,117 @@ interface MockStudent {
 })
 export class EmisService {
 
-  private schools: string[] = [
-    'Amy Roberts Primary', 'B. A. Newton Primary', 'Bahamas Technical & Vocational Institute (BTVI) - Abaco',
-    'Bahamas Technical & Vocational Institute (BTVI) - Andros', 'Bahamas Technical & Vocational Institute (BTVI) - Eleuthera',
-    'Bahamas Technical & Vocational Institute (BTVI) - Exuma', 'Bahamas Technical & Vocational Institute (BTVI) - Grand Bahama',
-    'Bahamas Technical & Vocational Institute (BTVI) - Nassau', 'Behring Point Primary', 'Black Point School',
-    'Blake Academy', 'Bowen Sound Primary', 'Central Abaco Primary', 'Central Andros High', 'Cherokee Sound Primary',
-    'Coopers Town Primary', 'East End Junior High', 'East End Preschool', 'East End Primary School', 'Eight Mile Rock High',
-    'Exuma School for Exceptional', 'Farmers Cay School', 'Forest Primary', 'Fox Town Primary', 'Freeport Primary',
-    'Freeport Primary School #2', 'George Town Primary', 'Grand Cay Comprehensive', 'Grand Bahama Academy',
-    'Great Guana Cay Primary', 'Holmes Rock Primary', 'Hope Town Primary', 'Hugh Campbell Primary', 'J. A. Pinder Primary',
-    "King's College School", 'Kingsway Academy', 'L.N. Coakley High', 'Lucaya International School',
-    'Lyford Cay International School', 'Man-O-War Cay Primary', 'Mary Star of the Sea Catholic School',
-    "Moore's Island All Age School", 'Moss Town Primary', 'Mount Thompson Primary', 'North Andros Instructional Service Centre',
-    "Queen's College", 'Ragged Island School', 'Rokers Point Primary', 'Rolleville Primary', 'Sherlin C.',
-    "St. Andrew's International School", 'Summit Academy', 'Tambearly International School', 'The Island School Eleuthera',
-    'Treasure Cay Primary', 'Windsor School',
-  ].sort();
+  // Cloud Function Base URL
+  // In production, this should be relative '/api' if hosted on Firebase,
+  // or the full URL. Using full URL for now to support local dev if needed.
+  private apiUrl = 'https://us-central1-bbms-1283c.cloudfunctions.net/api';
 
-  private mockStudents: MockStudent[] = [
-    {
-      openemis_no: '1522271973', first_name: 'Trushy', middle_name: '', third_name: 'Bait', last_name: 'Emilley',
-      gender_id: { key: 2, value: 'Female' }, date_of_birth: '2011-01-01T00:00:00.000000Z',
-      institution: { key: 2, value: 'Windhaven Primary School' }, photo_content: null,
-      status: 'Present',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Present' },
-        { date: '2025-11-12', status: 'Present' },
-      ]
-    },
-    {
-      openemis_no: '1522271974', first_name: 'John', middle_name: '', third_name: '', last_name: 'Doe',
-      gender_id: { key: 1, value: 'Male' }, date_of_birth: '2010-05-15T00:00:00.000000Z',
-      institution: { key: 1, value: 'Amy Roberts Primary' }, photo_content: null,
-      status: 'Absent',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Tardy', reason: 'Late Bus' },
-        { date: '2025-11-12', status: 'Absent' },
-      ]
-    },
-    {
-      openemis_no: '1522271975', first_name: 'Jane', middle_name: 'A', third_name: '', last_name: 'Smith',
-      gender_id: { key: 2, value: 'Female' }, date_of_birth: '2012-08-22T00:00:00.000000Z',
-      institution: { key: 3, value: 'Central Abaco Primary' }, photo_content: null,
-      status: 'Tardy', tardyReason: 'Doctor\'s Appointment',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Present' },
-        { date: '2025-11-12', status: 'Tardy', reason: 'Doctor\'s Appointment' },
-      ]
-    },
-    {
-      openemis_no: '1522271976', first_name: 'Peter', middle_name: '', third_name: '', last_name: 'Jones',
-      gender_id: { key: 1, value: 'Male' }, date_of_birth: '2011-03-20T00:00:00.000000Z',
-      institution: { key: 2, value: 'Windhaven Primary School' }, photo_content: null,
-      status: 'Present',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Present' },
-        { date: '2025-11-12', status: 'Present' },
-      ]
-    },
-    {
-      openemis_no: '1522271977', first_name: 'Alice', middle_name: 'B', third_name: '', last_name: 'Williams',
-      gender_id: { key: 2, value: 'Female' }, date_of_birth: '2010-11-05T00:00:00.000000Z',
-      institution: { key: 1, value: 'Amy Roberts Primary' }, photo_content: null,
-      status: 'Present',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Present' },
-        { date: '2025-11-12', status: 'Present' },
-      ]
-    },
-    {
-      openemis_no: '1522271978', first_name: 'Robert', middle_name: '', third_name: '', last_name: 'Brown',
-      gender_id: { key: 1, value: 'Male' }, date_of_birth: '2012-01-25T00:00:00.000000Z',
-      institution: { key: 3, value: 'Central Abaco Primary' }, photo_content: null,
-      status: 'Absent',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Absent' },
-        { date: '2025-11-12', status: 'Absent' },
-      ]
-    },
-    {
-      openemis_no: '1522271979', first_name: 'Emily', middle_name: '', third_name: '', last_name: 'Davis',
-      gender_id: { key: 2, value: 'Female' }, date_of_birth: '2011-07-12T00:00:00.000000Z',
-      institution: { key: 2, value: 'Windhaven Primary School' }, photo_content: null,
-      status: 'Tardy', tardyReason: 'Traffic',
-      attendanceHistory: [
-        { date: '2025-11-10', status: 'Present' },
-        { date: '2025-11-11', status: 'Tardy', reason: 'Traffic' },
-        { date: '2025-11-12', status: 'Tardy', reason: 'Traffic' },
-      ]
-    },
-  ];
+  private token: string | null = null;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   login(username: string, password: string): Observable<{ token: string }> {
-    return of({ token: this.generateFakeToken(username) }).pipe(delay(1500));
+    return this.http.post<{ data: { token: string } }>(`${this.apiUrl}/login`, { username, password }).pipe(
+      map(response => {
+        const token = response.data.token;
+        this.token = token;
+        return { token };
+      }),
+      catchError(this.handleError)
+    );
   }
 
   getSchools(): Observable<string[]> {
-    return of(this.schools).pipe(delay(2000));
+    if (!this.token) {
+      return throwError(() => new Error('Not authenticated'));
+    }
+    const headers = new HttpHeaders().set('Authorization', this.token);
+
+    // Fetch all institutions. Might need pagination handling if > 100.
+    // For now, requesting a large limit.
+    const params = new HttpParams().set('limit', '1000');
+
+    return this.http.get<any>(`${this.apiUrl}/emis/institutions`, { headers, params }).pipe(
+      map(response => {
+        // Map API response to simple string array of school names as expected by component
+        const institutions = response.data.data;
+        return institutions.map((inst: any) => inst.name).sort();
+      }),
+      catchError(this.handleError)
+    );
   }
 
-  getStudents(searchCriteria?: { lastName?: string, firstName?: string, dob?: string }): Observable<any[]> {
+  // Search students
+  getStudents(searchCriteria?: { lastName?: string, firstName?: string, dob?: string, openemis_no?: string }): Observable<Student[]> {
+    if (!this.token) {
+      return throwError(() => new Error('Not authenticated'));
+    }
     Swal.fire({ title: 'Searching Students...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    let filteredStudents = this.mockStudents;
 
+    const headers = new HttpHeaders().set('Authorization', this.token);
+    let params = new HttpParams().set('limit', '50'); // Limit results
+
+    // Note: The OpenEMIS API documentation provided didn't explicitly detail search parameters 
+    // beyond pagination. We are assuming standard query params might work or the Proxy 
+    // needs to handle it. If the API filters by these keys, this will work.
     if (searchCriteria) {
-      filteredStudents = this.mockStudents.filter(student => {
-        const lastNameMatch = !searchCriteria.lastName || (student.last_name && student.last_name.toLowerCase().includes(searchCriteria.lastName.toLowerCase()));
-        const firstNameMatch = !searchCriteria.firstName || (student.first_name && student.first_name.toLowerCase().includes(searchCriteria.firstName.toLowerCase()));
-        const dobMatch = !searchCriteria.dob || (student.date_of_birth && new Date(student.date_of_birth).toDateString() === new Date(searchCriteria.dob).toDateString());
-        return lastNameMatch && firstNameMatch && dobMatch;
-      });
+      if (searchCriteria.openemis_no) params = params.set('openemis_no', searchCriteria.openemis_no);
+      if (searchCriteria.firstName) params = params.set('first_name', searchCriteria.firstName);
+      if (searchCriteria.lastName) params = params.set('last_name', searchCriteria.lastName);
+      // Date format might need adjustment
+      if (searchCriteria.dob) params = params.set('date_of_birth', searchCriteria.dob);
     }
 
-    return of(filteredStudents).pipe(
-      delay(1500),
-      finalize(() => Swal.close())
+    return this.http.get<any>(`${this.apiUrl}/emis/institutions/students`, { headers, params }).pipe(
+      map(response => {
+        const apiStudents = response.data.data;
+        return apiStudents.map(this.mapApiStudentToAppStudent);
+      }),
+      finalize(() => Swal.close()),
+      catchError(this.handleError)
     );
   }
 
-  getStudentsList(): Observable<MockStudent[]> {
-    Swal.fire({ title: 'Fetching All Students...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    return of(this.mockStudents).pipe(
-      delay(1500),
-      finalize(() => Swal.close())
-    );
+  getStudentsList(): Observable<Student[]> {
+    return this.getStudents();
   }
 
-  getStudentDetailsByEmisNo(openemis_no: string): Observable<MockStudent | undefined> {
-    Swal.fire({ title: 'Getting Student Details...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    const student = this.mockStudents.find(s => s.openemis_no === openemis_no);
-    return of(student).pipe(
-      delay(1000),
-      finalize(() => Swal.close())
+  getStudentDetailsByEmisNo(openemis_no: string): Observable<Student | undefined> {
+    // Reuse getStudents with specific filter
+    return this.getStudents({ openemis_no }).pipe(
+      map(students => students.find(s => s.openemis_no === openemis_no))
     );
   }
 
   recordAttendance(attendanceData: { student_openemis_no: string, date: string, status: 'Present' | 'Absent' | 'Tardy', reason?: string }): Observable<{ success: boolean }> {
     Swal.fire({ title: 'Recording Attendance...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    const student = this.mockStudents.find(s => s.openemis_no === attendanceData.student_openemis_no);
-    if (student) {
-      const newRecord: AttendanceRecord = {
-        date: attendanceData.date,
-        status: attendanceData.status,
-      };
-      if (attendanceData.reason) {
-        newRecord.reason = attendanceData.reason;
-      }
-      student.attendanceHistory.push(newRecord);
-      student.status = attendanceData.status;
-      student.tardyReason = attendanceData.status === 'Tardy' ? attendanceData.reason : undefined;
-      console.log(`Attendance recorded for ${student.first_name} ${student.last_name}:`, newRecord);
-    }
-    return of({ success: true }).pipe(
-      delay(1500),
-      finalize(() => Swal.close())
+
+    // Mapping App status to LMS expected payload
+    // LMS expects: date, student_openemis_no, period (1 or 2), is_late (boolean)
+    // We default to period 1 as per requirements ("Period 1 Homeroom class")
+
+    const payload: any = {
+      date: attendanceData.date,
+      student_openemis_no: attendanceData.student_openemis_no,
+      period: 1, // Defaulting to Period 1
+      is_late: attendanceData.status === 'Tardy',
+      sync_to_openemis: true
+    };
+
+    // If there's a reason, we might want to append it? 
+    // The LMS API doesn't seem to have a 'reason' field in the docs provided, 
+    // only 'is_late'. We will log it for now or if there's a comment field not documented.
+
+    return this.http.post<any>(`${this.apiUrl}/attendance`, payload).pipe(
+      map(response => {
+        if (response.success) {
+          return { success: true };
+        } else {
+          throw new Error(response.error || 'Attendance recording failed');
+        }
+      }),
+      finalize(() => Swal.close()),
+      catchError(this.handleError)
     );
   }
 
@@ -200,36 +150,51 @@ export class EmisService {
   }
 
   updateStudentPhoto(openemis_no: string, photo_content: string): Observable<{ success: boolean }> {
-    Swal.fire({ title: 'Saving Photo...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    const student = this.mockStudents.find(s => s.openemis_no === openemis_no);
-    if (student) {
-      student.photo_content = photo_content;
-    }
-    return of({ success: true }).pipe(
-      delay(2000),
-      finalize(() => Swal.close())
+    // Endpoint for photo upload is not yet defined/verified.
+    // Returning success to not break the UI flow.
+    console.warn('Photo upload endpoint not implemented yet.');
+    return of({ success: true });
+  }
+
+  verifyStudent(qrCodeData: string, schoolName: string): Observable<Student> {
+    console.log(`Verifying QR Code: ${qrCodeData} for school: ${schoolName}`);
+
+    // The QR code is expected to contain the OpenEMIS Number
+    return this.getStudentDetailsByEmisNo(qrCodeData).pipe(
+      map(student => {
+        if (!student) {
+          throw new Error('Student not found');
+        }
+        return student;
+      })
     );
   }
 
-  verifyStudent(qrCodeData: string, schoolName: string): Observable<MockStudent> {
-    console.log(`Verifying QR Code: ${qrCodeData} for school: ${schoolName}`);
-    // Deterministically select a mock student regardless of QR contents
-    let index = 0;
-    if (qrCodeData) {
-      // Simple hash to spread selections
-      index = Array.from(qrCodeData).reduce((acc, ch) => (acc + ch.charCodeAt(0)) % this.mockStudents.length, 0);
-    }
-    const selected = this.mockStudents[index] || this.mockStudents[0];
-    return of(selected).pipe(delay(1200));
+  // Helper to map API data to our App's interface
+  private mapApiStudentToAppStudent(apiStudent: any): Student {
+    return {
+      openemis_no: apiStudent.openemis_no,
+      first_name: apiStudent.first_name,
+      middle_name: apiStudent.middle_name || '',
+      third_name: apiStudent.third_name || '',
+      last_name: apiStudent.last_name,
+      gender_id: { key: apiStudent.gender_id, value: apiStudent.gender_name },
+      date_of_birth: apiStudent.date_of_birth,
+      institution: { key: apiStudent.institution_id, value: apiStudent.institution_name },
+      photo_content: null, // Photo not available in this endpoint
+      status: undefined, // Status is not tracked in this endpoint
+      attendanceHistory: [] // History not available in this endpoint
+    };
   }
 
-  private generateFakeToken(username: string): string {
-    const header = { alg: 'HS256', typ: 'JWT' };
-    const payload = { sub: '1234567890', name: username, iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + (60 * 60) };
-    const encodedHeader = btoa(JSON.stringify(header)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    const encodedPayload = btoa(JSON.stringify(payload)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    const signature = 'fake-signature';
-    return `${encodedHeader}.${encodedPayload}.${signature}`;
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.message || 'Communication with server failed.',
+    });
+    return throwError(() => error);
   }
 }
 

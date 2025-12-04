@@ -1,25 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { EmisService } from '../../services/emis.service';
+import { EmisService, Student } from '../../services/emis.service';
 import Swal from 'sweetalert2';
 import { DatePickerComponent } from '../../components/date-picker/date-picker';
 import { ActivatedRoute, Router } from '@angular/router';
-
-interface MockStudent {
-  openemis_no: string;
-  first_name: string;
-  middle_name: string;
-  third_name: string;
-  last_name: string;
-  gender_id: { key: number; value: string };
-  date_of_birth: string;
-  institution: { key: number; value: string };
-  photo_content: string | null;
-  status?: 'Present' | 'Absent' | 'Tardy';
-  tardyReason?: string;
-  attendanceHistory: { date: string, status: 'Present' | 'Absent' | 'Tardy', reason?: string }[];
-}
 
 @Component({
   selector: 'app-manual-entry',
@@ -33,13 +18,13 @@ export class ManualEntryComponent implements OnInit {
   lastName: string = '';
   firstName: string = '';
   dob: string = '';
-  foundStudents: MockStudent[] = [];
-  selectedStudent: MockStudent | null = null;
+  foundStudents: Student[] = [];
+  selectedStudent: Student | null = null;
   searched: boolean = false;
   selectedSchool: string | null = null;
   fromScanner = false;
 
-  constructor(private emisService: EmisService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private emisService: EmisService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
@@ -65,7 +50,7 @@ export class ManualEntryComponent implements OnInit {
     });
   }
 
-  selectStudent(student: MockStudent): void {
+  selectStudent(student: Student): void {
     this.selectedStudent = student;
     this.currentView = 'student'; // Show student details view
   }

@@ -1,0 +1,20 @@
+
+# Compiled JavaScript files
+lib/
+lib
+
+# TypeScript v1 declaration files
+typings/
+typings
+
+# Node.js dependencies
+node_modules/
+node_modules
+
+# Logs
+firebase-debug.log*
+firebase-debug.*.log*
+
+# Env files
+.env
+.env.*

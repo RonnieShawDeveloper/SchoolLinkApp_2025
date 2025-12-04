@@ -16,4 +16,6 @@ This app integrates with the school's EMIS system. The EMIS that is being used i
 
 ## Technologies Used
 
-This is a Mobile First application that uses Angular 20 and Tailwind CSS v4. The app must be setup as a PWA so that it can be installed onto a device ( Android, iOS). This can be a phone or a tablet.  
+This is a Mobile First application that uses Angular 20+ and Tailwind CSS v4. The app must be setup as a PWA so that it can be installed onto a device ( Android, iOS). This can be a phone or a tablet.  
+
+

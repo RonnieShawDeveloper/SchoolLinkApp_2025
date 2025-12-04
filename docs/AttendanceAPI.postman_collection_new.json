@@ -1,0 +1,52 @@
+{
+    "info": {
+        "name": "AttendanceAPI Collection",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Record Attendance",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {
+                            "key": "username",
+                            "value": "2a3da1306e72cf015dff",
+                            "type": "string"
+                        },
+                        {
+                            "key": "password",
+                            "value": "",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"date\": \"2024-05-29\",\n    \"academic_period\": 1,\n    \"student_openemis_no\": \"2741866626\",\n    \"period\": 1\n}"
+                },
+                "url": {
+                    "raw": "http://localhost/API/v1.0/Plugin/AttendanceAPI",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "path": [
+                        "API",
+                        "v1.0",
+                        "Plugin",
+                        "AttendanceAPI"
+                    ]
+                }
+            }
+        }
+    ]
+}
