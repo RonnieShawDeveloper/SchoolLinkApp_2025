@@ -13,10 +13,10 @@ import Swal from 'sweetalert2';
   styleUrl: './attendance.css',
 })
 export class AttendanceComponent implements OnInit {
-  schools: string[] = [];
-  selectedSchool = '';
+  schools: { id: number, name: string }[] = [];
+  selectedSchool: { id: number, name: string } | null = null;
 
-  constructor(private router: Router, private emisService: EmisService) {}
+  constructor(private router: Router, private emisService: EmisService) { }
 
   ngOnInit(): void {
     Swal.fire({
@@ -28,9 +28,18 @@ export class AttendanceComponent implements OnInit {
       },
     });
 
-    this.emisService.getSchools().subscribe((schools) => {
-      this.schools = schools;
-      Swal.close();
+    this.emisService.getSchools().subscribe({
+      next: (schools) => {
+        this.schools = schools;
+        Swal.close();
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error Loading Schools',
+          text: err.message
+        });
+      }
     });
   }
 
@@ -40,7 +49,7 @@ export class AttendanceComponent implements OnInit {
 
   startScanning(): void {
     if (this.selectedSchool) {
-      this.router.navigate(['/scanner', this.selectedSchool]);
+      this.router.navigate(['/scanner', this.selectedSchool.id], { queryParams: { name: this.selectedSchool.name } });
     }
   }
 }

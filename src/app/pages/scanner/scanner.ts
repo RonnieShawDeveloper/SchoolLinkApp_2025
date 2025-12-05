@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./scanner.css']
 })
 export class ScannerComponent implements OnInit {
+  schoolId: number | null = null;
   schoolName: string | null = null;
   scannerEnabled = true;
 
@@ -21,10 +22,12 @@ export class ScannerComponent implements OnInit {
     private router: Router,
     private emisService: EmisService,
     private readonly changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.schoolName = this.route.snapshot.paramMap.get('school');
+    const idParam = this.route.snapshot.paramMap.get('schoolId');
+    this.schoolId = idParam ? +idParam : null;
+    this.schoolName = this.route.snapshot.queryParamMap.get('name');
   }
 
   scanSuccess(qrCodeData: string): void {
@@ -62,8 +65,8 @@ export class ScannerComponent implements OnInit {
           reverseButtons: true
         }).then(async (result) => {
           if (result.isConfirmed) {
-            // If school mismatch, require reason
-            if (this.schoolName && student.institution.value !== this.schoolName) {
+            // If school mismatch (compare IDs), require reason
+            if (this.schoolId && student.institution.key !== this.schoolId) {
               const { value: reason } = await Swal.fire({
                 title: 'School Mismatch',
                 html: `Current location: <b>${this.schoolName}</b><br/>Student enrolled at: <b>${student.institution.value}</b><br/><br/>Provide reason (Visiting, Transferring, etc.)`,
@@ -79,7 +82,7 @@ export class ScannerComponent implements OnInit {
               if (!reason) {
                 // User cancelled; just re-enable scanner below
               } else {
-                const today = new Date().toISOString().slice(0,10);
+                const today = new Date().toISOString().slice(0, 10);
                 this.emisService.recordAttendance({
                   student_openemis_no: student.openemis_no,
                   date: today,
@@ -89,7 +92,7 @@ export class ScannerComponent implements OnInit {
               }
             } else {
               // Record attendance as Present without extra reason
-              const today = new Date().toISOString().slice(0,10);
+              const today = new Date().toISOString().slice(0, 10);
               this.emisService.recordAttendance({
                 student_openemis_no: student.openemis_no,
                 date: today,
@@ -113,7 +116,7 @@ export class ScannerComponent implements OnInit {
               // cancelled entering tardy reason; do nothing further
             } else {
               let finalReason = tardyReason;
-              if (this.schoolName && student.institution.value !== this.schoolName) {
+              if (this.schoolId && student.institution.key !== this.schoolId) {
                 const { value: mismatchReason } = await Swal.fire({
                   title: 'School Mismatch',
                   html: `Current location: <b>${this.schoolName}</b><br/>Student enrolled at: <b>${student.institution.value}</b><br/><br/>Provide reason (Visiting, Transferring, etc.)`,
@@ -130,7 +133,7 @@ export class ScannerComponent implements OnInit {
                   // cancelled mismatch reason; abort recording
                 } else {
                   finalReason = `${tardyReason}; ${mismatchReason}`;
-                  const today = new Date().toISOString().slice(0,10);
+                  const today = new Date().toISOString().slice(0, 10);
                   this.emisService.recordAttendance({
                     student_openemis_no: student.openemis_no,
                     date: today,
@@ -139,7 +142,7 @@ export class ScannerComponent implements OnInit {
                   }).subscribe();
                 }
               } else {
-                const today = new Date().toISOString().slice(0,10);
+                const today = new Date().toISOString().slice(0, 10);
                 this.emisService.recordAttendance({
                   student_openemis_no: student.openemis_no,
                   date: today,
@@ -158,16 +161,16 @@ export class ScannerComponent implements OnInit {
           }, 500); // 500ms delay
         });
       },
-      error: () => {
+      error: (err) => {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: 'Could not verify student. Please try again.',
+          title: 'Scan Failed',
+          text: err.message || 'Could not verify student. Please try again.',
         }).then(() => {
-            setTimeout(() => {
-              this.scannerEnabled = true;
-              this.changeDetectorRef.detectChanges();
-            }, 500); // 500ms delay
+          setTimeout(() => {
+            this.scannerEnabled = true;
+            this.changeDetectorRef.detectChanges();
+          }, 500); // 500ms delay
         });
       }
     });

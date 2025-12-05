@@ -6,12 +6,15 @@
       Please select the school that you will be checking students in at and press the Start Scanning button.
     </p>
 
-    <select [(ngModel)]="selectedSchool" class="w-full max-w-md p-2 border border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-      <option value="" disabled>Select a school</option>
-      <option *ngFor="let school of schools" [value]="school">{{ school }}</option>
+    <p class="text-sm text-gray-600 font-bold mb-2">{{ schools.length }} Schools Loaded</p>
+    <select [(ngModel)]="selectedSchool"
+      class="w-full max-w-md p-2 border border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+      <option [ngValue]="null" disabled>Select a school</option>
+      <option *ngFor="let school of schools" [ngValue]="school">{{ school.name }}</option>
     </select>
 
-    <button (click)="startScanning()" [disabled]="!selectedSchool" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed">
+    <button (click)="startScanning()" [disabled]="!selectedSchool"
+      class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed">
       Start Scanning
     </button>
   </div>

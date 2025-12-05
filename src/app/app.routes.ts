@@ -27,7 +27,7 @@ export const routes: Routes = [
         data: { animation: 'InstallPage' }
     },
     {
-        path: 'scanner/:school',
+        path: 'scanner/:schoolId',
         loadComponent: () => import('./pages/scanner/scanner').then(c => c.ScannerComponent),
         data: { animation: 'ScannerPage' }
     },

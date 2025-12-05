@@ -8,15 +8,18 @@
     </div>
   </div>
 
+  <h2 *ngIf="schoolName" class="text-center text-xl font-bold text-yellow-600 mb-2">{{ schoolName }}</h2>
   <p class="text-center text-lg font-semibold mt-4">
-    Please align the QR Code on the student ID in the camera window to scan.
+    Please align QR Code
   </p>
 
   <div class="mt-4 flex gap-3 justify-center">
-    <button (click)="goToManualEntry()" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
+    <button (click)="goToManualEntry()"
+      class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
       Manual Entry
     </button>
-    <button (click)="exitToDashboard()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
+    <button (click)="exitToDashboard()"
+      class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
       Exit
     </button>
   </div>
