@@ -49,7 +49,10 @@ app.use(cors({ origin: true }));
 /**
  * Base URL for the OpenEMIS Core API (UAT Environment).
  */
-const EMIS_BASE_URL = "https://bs-moe-uat.openemis.org/core";
+/**
+ * Base URL for the OpenEMIS Core API (UAT Environment).
+ */
+const EMIS_BASE_URL = process.env.EMIS_BASE_URL || "https://bs-moe-uat.openemis.org/core";
 
 /**
  * API Key for authenticating with the OpenEMIS API.
@@ -70,7 +73,7 @@ const DEFAULT_EMIS_PASS = process.env.DEFAULT_EMIS_PASS || "";
 /**
  * Base URL for the LMS (Learning Management System) Attendance API.
  */
-const LMS_BASE_URL = "https://bahamas-dev.1on1staging.com/API/v1.0/Plugin/AttendanceAPI";
+const LMS_BASE_URL = process.env.LMS_BASE_URL || "https://bahamas-dev.1on1staging.com/API/v1.0/Plugin/AttendanceAPI";
 
 /**
  * API Key for authenticating with the LMS Attendance API.
