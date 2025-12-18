@@ -36,6 +36,9 @@ admin.initializeApp();
  */
 const app = express();
 
+// Disable ETag to prevent unexpected 304 Not Modified responses
+app.set("etag", false);
+
 // Enable Cross-Origin Resource Sharing (CORS) to allow requests from the SchoolLink web application.
 app.use(cors({ origin: true }));
 
@@ -139,11 +142,18 @@ app.post("/login", async (req: Request, res: Response) => {
  * @returns {object} 500 - Error if the upstream request fails.
  */
 app.get("/emis/*", async (req: Request, res: Response) => {
+    const path = (req.params as any)[0];
+    const requestId = Math.random().toString(36).substring(7);
+    const startTime = Date.now();
+
+    console.log(`[${requestId}] EMIS REQUEST: GET /${path}`);
+    console.log(`[${requestId}] Params:`, JSON.stringify(req.query));
+
     try {
-        const path = (req.params as any)[0];
         const token = req.headers.authorization;
 
         if (!token) {
+            console.warn(`[${requestId}] Missing Authorization header`);
             res.status(401).json({ error: "Missing Authorization header" });
             return;
         }
@@ -154,9 +164,36 @@ app.get("/emis/*", async (req: Request, res: Response) => {
             params: req.query,
         });
 
+        const duration = Date.now() - startTime;
+        console.log(`[${requestId}] OPENEMIS RESPONSE (${response.status}) in ${duration}ms`);
+
+        // Detailed verification of the data structure
+        if (response.data) {
+            console.log(`[${requestId}] Data Keys:`, Object.keys(response.data));
+
+            // Handle nested data property if present (paginated response)
+            let items = response.data.data;
+            if (items && !Array.isArray(items) && items.data) {
+                items = items.data;
+            }
+
+            if (Array.isArray(items)) {
+                console.log(`[${requestId}] Status: SUCCESS - Returned ${items.length} items`);
+                if (items.length > 0) {
+                    console.log(`[${requestId}] Sample Item:`, JSON.stringify(items[0]).substring(0, 100));
+                }
+            } else {
+                console.warn(`[${requestId}] Status: WARNING - Could not find array in response.data.data`);
+                console.log(`[${requestId}] Raw Data Preview:`, JSON.stringify(response.data).substring(0, 200));
+            }
+        } else {
+            console.error(`[${requestId}] Status: ERROR - response.data is empty`);
+        }
+
         res.json(response.data);
     } catch (error: any) {
-        console.error(`EMIS Proxy Error (${req.path}):`, error.response?.data || error.message);
+        const duration = Date.now() - startTime;
+        console.error(`[${requestId}] EMIS PROXY ERROR after ${duration}ms:`, error.response?.data || error.message);
         res.status(error.response?.status || 500).json(error.response?.data || { error: "EMIS request failed" });
     }
 });

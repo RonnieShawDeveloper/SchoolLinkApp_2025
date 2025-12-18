@@ -88,6 +88,7 @@ export class EmisService {
    */
   getSchools(): Observable<{ id: number, name: string }[]> {
     if (!this.token) {
+      console.error('[EmisService] getSchools called but no token available');
       return throwError(() => new Error('Not authenticated'));
     }
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
@@ -96,14 +97,40 @@ export class EmisService {
     // For now, requesting a large limit.
     const params = new HttpParams().set('limit', '1000');
 
+    console.log('[EmisService] Fetching schools...');
+
     return this.http.get<any>(`${this.apiUrl}/emis/institutions`, { headers, params }).pipe(
       map(response => {
-        // Map API response to array of school objects { id, name }
-        const institutions = response.data.data;
+        console.log('[EmisService] Raw response:', JSON.stringify(response).substring(0, 500));
+
+        // Try to find the array of institutions in the response
+        let institutions: any[] = [];
+
+        if (Array.isArray(response)) {
+          // Response is directly an array
+          institutions = response;
+        } else if (response && response.data) {
+          if (Array.isArray(response.data)) {
+            // response.data is the array
+            institutions = response.data;
+          } else if (response.data.data && Array.isArray(response.data.data)) {
+            // Paginated: response.data.data is the array
+            institutions = response.data.data;
+          }
+        }
+
+        console.log('[EmisService] Extracted institutions count:', institutions.length);
+        if (institutions.length > 0) {
+          console.log('[EmisService] First institution:', JSON.stringify(institutions[0]));
+        }
+
         return institutions.map((inst: any) => ({ id: inst.id, name: inst.name }))
           .sort((a: any, b: any) => a.name.localeCompare(b.name));
       }),
-      catchError(this.handleError)
+      catchError(error => {
+        console.error('[EmisService] getSchools error:', error);
+        return this.handleError(error);
+      })
     );
   }
 
